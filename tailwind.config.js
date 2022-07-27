@@ -1,8 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateColumns: {
+        fluid: "repeat(auto-fit, minmax(24rem, 1fr))",
+      },
+    },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
   content: ["./src/**/*.{js,jsx,ts,tsx,html}", "./public/index.html"],
 };
