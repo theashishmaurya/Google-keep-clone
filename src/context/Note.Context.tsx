@@ -1,5 +1,11 @@
+import { DocumentData } from "firebase/firestore/lite";
 import { createContext, ReactNode, useEffect, useReducer } from "react";
-import { addNote, getNotes, updateNotes } from "../componets/api/firebase";
+import {
+  addNote,
+  deleteNote,
+  getNotes,
+  updateNotes,
+} from "../componets/api/firebase";
 
 export interface Note {
   id: string;
@@ -20,18 +26,20 @@ function reducer(state: Note[], action: { type: string; payload: any }) {
       addNote(action.payload);
       return [...state, action.payload];
     case "DELETE_NOTE":
+      deleteNote(action.payload.id);
       return state.filter((note: Note) => note.id !== action.payload.id);
     case "UPDATE_NOTE":
       return state.map((note: Note) => {
         if (note.id === action.payload.id) {
-          updateNotes(note.id, action.payload);
+          updateNotes(action.payload);
           return action.payload;
         }
         return note;
       });
     case "PIN_NOTE":
       return state.map((note: Note) => {
-        if (note.id === action.payload) {
+        if (note.id === action.payload.id) {
+          updateNotes(action.payload);
           return { ...note, isPinned: !note.isPinned };
         }
         return note;

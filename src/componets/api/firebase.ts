@@ -1,6 +1,6 @@
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs , setDoc, doc } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs , setDoc, doc, deleteDoc } from 'firebase/firestore/lite';
 import { Note } from "../../context/Note.Context";
 
 const firebaseConfig = {
@@ -24,14 +24,16 @@ export const getNotes = async () => {
     return notes
 }
 
-export const updateNotes = async (id:string,payload :Note)=>{
+export const updateNotes = async (payload :Note)=>{
     const notesCollection = collection(db,'notes');
-    const noteDoc = doc(notesCollection,id);
-    await setDoc(noteDoc,payload)
+    const noteDoc = doc(notesCollection,payload.id);
+    let newPayload = {...payload,isPinned : !payload.isPinned}
+    await setDoc(noteDoc,newPayload)
 }
 
-export const deleteNote = async () =>{
-    
+export const deleteNote = async (id:string) =>{
+    const notesCollection = collection(db,'notes')
+    await deleteDoc(doc(notesCollection,id))
 }
 
 export const addNote = async (payload:Note) =>{

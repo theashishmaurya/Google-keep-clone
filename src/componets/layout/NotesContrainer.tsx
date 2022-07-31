@@ -36,6 +36,16 @@ export default function NotesContainer() {
     });
   };
 
+  const handleCancel = () => {
+    setNoteValue({
+      id: nanoid(),
+      title: "",
+      tagline: "",
+      description: "",
+      isPinned: false,
+    });
+  };
+
   const handlePin = () => {
     setNoteValue({ ...NoteValue, isPinned: !NoteValue.isPinned });
   };
@@ -54,18 +64,33 @@ export default function NotesContainer() {
             onChange={handleChange}
             onSave={handleAddNotes}
             handlePin={handlePin}
+            onCancel={handleCancel}
           />
         </div>
       </div>
+      <div className='my-4 text-2xl'>Pinned</div>
       <div className='h-full grid  grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-0 my-10 gap-4'>
-        {currentTableData.map((note) => (
-          <div className='' key={note.id}>
-            <NoteCard note={note} />
-          </div>
-        ))}
+        {currentTableData.map((note) => {
+          if (note.isPinned) {
+            return <NoteCard key={note.id} note={note} />;
+          }
+        })}
       </div>
-      <div className=' w-full flex justify-center'>
-        <div className='absolute bottom-10'>
+      <div className='divider'></div>
+
+      <div className='h-full grid  grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-0 my-10 gap-4'>
+        {currentTableData.map((note) => {
+          if (!note.isPinned) {
+            return (
+              <div className='' key={note.id}>
+                <NoteCard note={note} />
+              </div>
+            );
+          }
+        })}
+      </div>
+      <div className=' w-full flex justify-center my-10'>
+        <div className='relative bottom-0'>
           <Pagination
             currentPage={currentPage}
             totalCount={NoteData.length}

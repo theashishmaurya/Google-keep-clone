@@ -10,6 +10,7 @@ export interface NoteTextAreaProps {
   onSave?: () => void;
   handlePin?: () => void;
   modalClose?: () => void;
+  onCancel?: () => void;
 }
 
 export default function NoteTextArea(props: NoteTextAreaProps) {
@@ -35,6 +36,11 @@ export default function NoteTextArea(props: NoteTextAreaProps) {
   const handleSave = () => {
     props.onSave?.();
     handleCollapse();
+  };
+
+  const handelCancel = () => {
+    handleCollapse();
+    props.onCancel?.();
   };
 
   return (
@@ -97,9 +103,17 @@ export default function NoteTextArea(props: NoteTextAreaProps) {
                 Update
               </label>
             ) : (
-              <label className='btn btn-active' onClick={handleSave}>
-                Add
-              </label>
+              <div>
+                <label className='btn btn-active mx-4' onClick={handleSave}>
+                  Add
+                </label>
+                <label
+                  className='btn bg-white text-black hover:text-white'
+                  onClick={handelCancel}
+                >
+                  Cancel
+                </label>
+              </div>
             )}
           </div>
         )}
