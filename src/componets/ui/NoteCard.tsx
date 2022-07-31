@@ -32,7 +32,8 @@ export default function NoteCard({ note }: { note: Note }) {
       />
       <div className='card w-96 glass bg-gray-400'>
         <div className='card-body pb-0' onClick={handleOpen}>
-          <h2 className='card-title'>{note.title}</h2>
+          <h2 className='card-title text-2xl'>{note.title}</h2>
+          <h4 className='text-gray-600 font-light text-sm'>{note.tagline}</h4>
           <p>{note.description}</p>
         </div>
         <div className='card-actions justify-center my-4'>
