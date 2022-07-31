@@ -70,6 +70,7 @@ export default function NotesContainer() {
       </div>
       <div className='my-4 text-2xl'>Pinned</div>
       <div className='h-full grid  grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-0 my-10 gap-4'>
+        {/*  eslint-disable-next-line array-callback-return */}
         {currentTableData.map((note) => {
           if (note.isPinned) {
             return <NoteCard key={note.id} note={note} />;
@@ -79,6 +80,7 @@ export default function NotesContainer() {
       <div className='divider'></div>
 
       <div className='h-full grid  grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-0 my-10 gap-4'>
+        {/*  eslint-disable-next-line array-callback-return */}
         {currentTableData.map((note) => {
           if (!note.isPinned) {
             return (

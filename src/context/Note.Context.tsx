@@ -1,4 +1,3 @@
-import { DocumentData } from "firebase/firestore/lite";
 import { createContext, ReactNode, useEffect, useReducer } from "react";
 import {
   addNote,
