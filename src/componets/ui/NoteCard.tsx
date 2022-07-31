@@ -1,23 +1,46 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbTack } from "@fortawesome/free-solid-svg-icons";
-export default function NoteCard() {
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import PinIcon from "./PinIcon";
+import NoteModal from "./NoteModal";
+import { Note } from "../../context/Note.Context";
+import { useState } from "react";
+
+export default function NoteCard({ note }: { note: Note }) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleOpen = () => {
+    setModalOpen(true);
+  };
+  const handleClose = () => {
+    setModalOpen(false);
+  };
   return (
-    <label
-      className='card w-96 glass bg-gray-400 p-4 modal-button'
-      htmlFor='my-modal-4'
-    >
-      <div className='flex w-full justify-end'>
-        <FontAwesomeIcon icon={faThumbTack} size='lg' color='red' />
-      </div>
-      <div className='card-body'>
-        <h2 className='card-title'>Life hack</h2>
-        <p>How to park your car at your garage?</p>
-        <div className='card-actions justify-center'>
-          {/* <FontAwesomeIcon icon={} />
-          <FontAwesomeIcon icon={} />
-          <FontAwesomeIcon icon={} /> */}
+    <div>
+      <NoteModal
+        value={note}
+        open={modalOpen}
+        onOpen={handleOpen}
+        onClose={handleClose}
+      />
+      <div className='card w-96 glass bg-gray-400'>
+        <div className='card-body pb-0' onClick={handleOpen}>
+          <h2 className='card-title'>{note.title}</h2>
+          <p>{note.description}</p>
+        </div>
+        <div className='card-actions justify-center my-4'>
+          <PinIcon className='mx-2 cursor-pointer ' isPinned={note.isPinned} />
+          <FontAwesomeIcon
+            icon={faTrash}
+            size='lg'
+            className='mx-2 cursor-pointer'
+          />
+          <FontAwesomeIcon
+            onClick={handleOpen}
+            icon={faPen}
+            size='lg'
+            className='mx-2 cursor-pointer '
+          />
         </div>
       </div>
-    </label>
+    </div>
   );
 }

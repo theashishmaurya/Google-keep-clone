@@ -1,31 +1,40 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { faThumbTack } from "@fortawesome/free-solid-svg-icons";
+import { Note } from "../../context/Note.Context";
+import PinIcon from "./PinIcon";
 
-export default function NoteTextArea({ expanded }: { expanded: boolean }) {
-  const [isExpanded, setIsExpanded] = useState<boolean>(expanded);
-  const [isPinned, setIsPinned] = useState(false);
+export interface NoteTextAreaProps {
+  expanded?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  value?: Note;
+  isEditing?: boolean;
+  onSave?: () => void;
+  handlePin?: () => void;
+  modalClose?: () => void;
+}
+
+export default function NoteTextArea(props: NoteTextAreaProps) {
+  const [isExpanded, setIsExpanded] = useState<boolean>(
+    props?.expanded || false
+  );
 
   useEffect(() => {
-    setIsExpanded(expanded);
-  }, []);
+    if (props.expanded) setIsExpanded(props.expanded);
+  }, [props.expanded]);
 
   // To Implemet the expand/collapse feature, we need to shift the focus to the textarea and then back to the noteAear.
   const handleExpand = () => {
     setIsExpanded(true);
   };
   const handleCollapse = () => {
-    const modal = document.getElementById("text-area-modal");
-    if (modal) {
-      modal.classList.remove("modal-open");
+    if (props.modalClose) {
+      props.modalClose?.();
+      return;
     }
     setIsExpanded(false);
   };
   const handleSave = () => {
+    props.onSave?.();
     handleCollapse();
-  };
-  const handlePin = () => {
-    setIsPinned(!isPinned);
   };
 
   return (
@@ -33,35 +42,65 @@ export default function NoteTextArea({ expanded }: { expanded: boolean }) {
       <div className='shadow-lg border-1 rounded-xl w-full p-4'>
         <div onClick={handleExpand}>
           {isExpanded && (
-            <div className='flex justify-between items-center'>
-              <textarea
-                rows={1}
-                placeholder='Title'
-                className='textarea w-full focus:outline-none text-2xl resize-none my-2 font-bold'
-              />
-              <div className='mx-2' onClick={handlePin}>
-                {isPinned ? (
-                  <FontAwesomeIcon icon={faThumbTack} size='lg' color='red' />
-                ) : (
-                  <FontAwesomeIcon icon={faThumbTack} size='lg' />
-                )}
+            <div>
+              <div className='flex justify-between items-center'>
+                <textarea
+                  value={props.value?.title}
+                  rows={1}
+                  placeholder='Title'
+                  name='title'
+                  onChange={(e) => {
+                    props.onChange?.(e);
+                  }}
+                  className='textarea w-full focus:outline-none text-2xl resize-none my-2 font-bold'
+                />
+                <PinIcon
+                  className='mx-2 cursor-pointer'
+                  isPinned={props.value?.isPinned}
+                  onClick={props.handlePin}
+                />
               </div>
+              <textarea
+                value={props.value?.tagline}
+                rows={1}
+                placeholder="What's the tagline? (Optional)"
+                name='tagline'
+                onChange={(e) => {
+                  props.onChange?.(e);
+                }}
+                className='textarea w-full focus:outline-none text-lg resize-none my-2 font-light'
+              />
             </div>
           )}
 
           <textarea
             className='textarea w-full focus:outline-none text-2xl resize-none'
+            name='description'
+            value={props.value?.description}
             placeholder={
               isExpanded ? "Write your note here" : "Start typing..."
             }
+            onChange={(e) => {
+              props.onChange?.(e);
+            }}
             rows={isExpanded ? 5 : 1} // 1 row for the textarea
           ></textarea>
         </div>
         {isExpanded && (
           <div className='flex justify-end'>
-            <label className='btn btn-active' onClick={handleSave}>
-              Save
-            </label>
+            {props.isEditing !== undefined && props.isEditing ? (
+              <label
+                htmlFor='my-modal-4'
+                className='btn btn-active'
+                onClick={handleSave}
+              >
+                Update
+              </label>
+            ) : (
+              <label className='btn btn-active' onClick={handleSave}>
+                Add
+              </label>
+            )}
           </div>
         )}
       </div>

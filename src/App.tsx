@@ -1,9 +1,12 @@
 import NotesContainer from "./componets/layout/NotesContrainer";
+import NoteDataProvider from "./context/Note.Context";
 
 function App() {
   return (
     <div className='h-full w-full flex mx-auto'>
-      <NotesContainer />
+      <NoteDataProvider>
+        <NotesContainer />
+      </NoteDataProvider>
     </div>
   );
 }
